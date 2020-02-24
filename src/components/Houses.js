@@ -14,6 +14,8 @@ class Houses extends React.Component {
     allhouses: [],
     types: [],
     typeFilter: "allTypes",
+    minbedrooms: 0,
+    maxprice: 100000,
     map: {
       key: {
         key: "AIzaSyBKMVj4gaJLU9GTV1zOaWQj7ggKVbXQep0"
@@ -76,6 +78,8 @@ class Houses extends React.Component {
       houses: filterHouses
     });
   };
+  // filters
+
   typeFilter = e => {
     let dbHouses = this.state.allhouses;
     let currentHouses = this.state.houses;
@@ -83,16 +87,43 @@ class Houses extends React.Component {
       return house.type.name == e.target.value;
     });
     if (e.target.value == "allTypes") {
-      this.setState({ typeFilter: e.target.value, houses: dbHouses });
+      this.setState({ typeFilter: e.target.value, houses: dbHouses }, () =>
+        this.applyFilter()
+      );
     } else {
-      this.setState({ typeFilter: e.target.value, houses: filterHouses });
+      this.setState({ typeFilter: e.target.value, houses: filterHouses }, () =>
+        this.applyFilter()
+      );
     }
-    // if (e.target.value != "allTypes") {
-    //   this.setState({ typeFilter: e.target.value, houses: filterHouses });
-    // } else {
-    //   this.setState({ houses: dbHouses });
-    // }
-    console.log(filterHouses);
+  };
+
+  setBedrooms = e => {
+    let numBedrooms = e.target.value;
+    console.log(numBedrooms);
+    this.setState({ minbedrooms: numBedrooms }, () => this.applyFilter());
+  };
+
+  setPrice = e => {
+    let maxprice = e.target.value;
+    this.setState({ maxprice }, () => this.applyFilter());
+  };
+
+  applyFilter = () => {
+    let filterHouses = [];
+    this.state.allhouses.forEach(house => {
+      if (
+        house.bedrooms > this.state.minbedrooms &&
+        house.price < Number(this.state.maxprice) &&
+        (house.type.name == this.state.typeFilter ||
+          this.state.typeFilter == "allTypes")
+      ) {
+        filterHouses.push(house);
+      }
+    });
+    // console.log(this.state.minbedrooms);
+    // console.log(this.state.maxprice);
+    // console.log(this.state.typeFilter);
+    this.setState({ houses: filterHouses });
   };
 
   render() {
@@ -107,22 +138,30 @@ class Houses extends React.Component {
           </div>
         </nav>
         <div className="filters">
-          <select>
+          {/* Bedrooms */}
+          <select value={this.state.bedrooms} onChange={this.setBedrooms}>
             {[...Array(6)].map((e, i) => {
-              return <option value="">Min Bedrooms: {1 + i}</option>;
+              return <option value={i + 1}>Min Bedrooms: {1 + i}</option>;
             })}
           </select>
+          {/* Room Types */}
           <select value={this.state.typeFilter} onChange={this.typeFilter}>
             <option value="allTypes">All Types</option>
             {this.state.types.map(type => {
               return <option value={type}>{type}</option>;
             })}
           </select>
-          <input type="number" placeholder="max price" />
+          {/*Price Range*/}
+          <input
+            type="number"
+            placeholder="max price"
+            onChange={this.setPrice}
+          />
           <select>
             <option value="price">Lowest Price</option>
             <option value="rating">Highest Rating</option>
           </select>
+          // Search Filter
           <input
             type="text"
             className="search"
