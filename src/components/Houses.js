@@ -7,6 +7,7 @@ import "../styles/grid.css";
 import "../styles/maps.css";
 import "../styles/nav.css";
 import Thumbnail from "./Thumbnail";
+import Pin from "./Pin";
 
 class Houses extends React.Component {
   state = {
@@ -99,7 +100,6 @@ class Houses extends React.Component {
 
   setBedrooms = e => {
     let numBedrooms = e.target.value;
-    console.log(numBedrooms);
     this.setState({ minbedrooms: numBedrooms }, () => this.applyFilter());
   };
 
@@ -120,10 +120,22 @@ class Houses extends React.Component {
         filterHouses.push(house);
       }
     });
-    // console.log(this.state.minbedrooms);
-    // console.log(this.state.maxprice);
-    // console.log(this.state.typeFilter);
     this.setState({ houses: filterHouses });
+  };
+
+  //Google Maps Pins on hover
+
+  houseHover = id => {
+    let currentHouses = this.state.houses;
+    currentHouses.map(house => {
+      house.selected = false;
+      return house;
+    });
+    let a = currentHouses.find(house => house._id == id);
+    a.selected = true;
+    this.setState({
+      houses: currentHouses
+    });
   };
 
   render() {
@@ -161,7 +173,7 @@ class Houses extends React.Component {
             <option value="price">Lowest Price</option>
             <option value="rating">Highest Rating</option>
           </select>
-          // Search Filter
+          {/* Search Filter */}
           <input
             type="text"
             className="search"
@@ -173,15 +185,31 @@ class Houses extends React.Component {
           <div className="grid four large">
             {// List of thumbnails
             this.state.houses.map(house => (
-              <Thumbnail key={house.id} house={house} />
+              <Thumbnail
+                onHover={this.houseHover}
+                key={house.id}
+                house={house}
+              />
             ))}
           </div>
           <div className="map">
+            {/*List of Pins */}
             <GoogleMap
               bootstrapURLKeys={this.state.map.key}
               center={this.state.map.center}
               zoom={this.state.map.zoom}
-            ></GoogleMap>
+            >
+              {this.state.houses.map(house => {
+                return (
+                  <Pin
+                    key={house.id}
+                    house={house}
+                    lat={house.lat}
+                    lng={house.lng}
+                  ></Pin>
+                );
+              })}
+            </GoogleMap>
           </div>
         </div>
       </>

@@ -7,6 +7,7 @@ class Thumbnail extends React.Component {
         className="card link"
         href={`/houses/${this.props.house._id}`}
         key={this.props.house._id}
+        onMouseEnter={() => this.props.onHover(this.props.house._id)}
       >
         <div
           className="image"
