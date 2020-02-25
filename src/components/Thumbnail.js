@@ -1,11 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 class Thumbnail extends React.Component {
   render() {
     return (
-      <a
+      <Link
         className="card link"
-        href={`/houses/${this.props.house._id}`}
+        to={`/houses/${this.props.house._id}`}
         key={this.props.house._id}
         onMouseEnter={() => this.props.onHover(this.props.house._id)}
       >
@@ -34,7 +35,7 @@ class Thumbnail extends React.Component {
             ))}
           </span>
         </div>
-      </a>
+      </Link>
     );
   }
 }
