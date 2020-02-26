@@ -105,7 +105,16 @@ class Houses extends React.Component {
 
   setPrice = e => {
     let maxprice = e.target.value;
-    this.setState({ maxprice }, () => this.applyFilter());
+    if (maxprice == "") {
+      this.setState(
+        {
+          maxprice: 1000000
+        },
+        () => this.applyFilter()
+      );
+    } else {
+      this.setState({ maxprice }, () => this.applyFilter());
+    }
   };
 
   applyFilter = () => {
@@ -133,6 +142,16 @@ class Houses extends React.Component {
     });
     let a = currentHouses.find(house => house._id == id);
     a.selected = true;
+    this.setState({
+      houses: currentHouses
+    });
+  };
+  leaveHouse = () => {
+    let currentHouses = this.state.houses;
+    currentHouses.map(house => {
+      house.selected = false;
+      return house;
+    });
     this.setState({
       houses: currentHouses
     });
@@ -183,6 +202,7 @@ class Houses extends React.Component {
             this.state.houses.map(house => (
               <Thumbnail
                 onHover={this.houseHover}
+                leaveHouse={this.leaveHouse}
                 key={house.id}
                 house={house}
               />

@@ -9,6 +9,7 @@ class Thumbnail extends React.Component {
         to={`/houses/${this.props.house._id}`}
         key={this.props.house._id}
         onMouseEnter={() => this.props.onHover(this.props.house._id)}
+        onMouseLeave={this.props.leaveHouse}
       >
         <div
           className="image"
