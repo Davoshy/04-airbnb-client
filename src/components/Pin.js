@@ -6,7 +6,7 @@ class Pin extends React.Component {
 		lat: this.props.lat,
 		lng: this.props.lng
 	}
-	componentWillMount() {
+	componentDidMount() {
 		this.setState({
 			house: this.props.house,
 			lat: this.props.lat,
