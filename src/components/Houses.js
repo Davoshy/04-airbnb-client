@@ -155,6 +155,19 @@ class Houses extends React.Component {
 		})
 	}
 
+	getRatingFilter = e => {
+		let filterType = e.target.value
+		let filteredHouses = []
+		if (filterType == 'price') {
+			filteredHouses = this.state.houses.sort((a, b) => a.price - b.price)
+		} else if (filterType == 'rating') {
+			filteredHouses = this.state.houses.sort((a, b) => b.rating - a.rating)
+		}
+		this.setState({
+			houses: filteredHouses
+		})
+	}
+
 	render() {
 		return (
 			<>
@@ -182,7 +195,7 @@ class Houses extends React.Component {
 						placeholder="max price"
 						onChange={this.setPrice}
 					/>
-					<select>
+					<select onChange={this.getRatingFilter}>
 						<option value="price">Lowest Price</option>
 						<option value="rating">Highest Rating</option>
 					</select>
